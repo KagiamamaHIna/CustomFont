@@ -1,0 +1,5 @@
+custom_font_lang_id,en,ru,pt-br,es-es,de,fr-fr,it,pl,zh-cn,jp,ko,,NOTES – use \n for newline,max length,,,,,,,,,,占位符，用于表示每一格对应的语言
+custom_font_picker_open,Open ,,,,,,,,打开,,,,,,,,,,,,,,,
+custom_font_picker_close,Close ,,,,,,,,关闭,,,,,,,,,,,,,,,
+custom_font_picker_desc,"This is the moveable button, press shift+left mouse button to move\nClick the left mouse button again to determine the position\nRight mouse button to reset the position",,,,,,,,这是可移动按钮，按shift+鼠标左键可以移动\n再点击一次鼠标左键确定位置\n鼠标右键重置位置,,,,,,,,,,,,,,,
+custom_font_picker_more,Hold ctrl for more information,,,,,,,,按住ctrl查阅更多信息,,,,,,,,,,,,,,,
