@@ -28,7 +28,7 @@ else
 end
 
 CustomFontState = false
-if not ModSettingGet(ModID .. "DisableFont") and Cpp.PathExists(GenFontPath .. "/current.bin") and Cpp.PathExists(GenFontPath .. "/current.png") then
+if not ModSettingGet(ModID .. ".disable_font") and not ModSettingGet(ModID .. "DisableFontAndClear") and Cpp.PathExists(GenFontPath .. "/current.bin") and Cpp.PathExists(GenFontPath .. "/current.png") then
     local langList = { "en", "ru", "pt-br", "es-es", "de", "fr-fr", "it", "pl", "zh-cn", "jp", "ko" }
     for _,v in ipairs(langList)do
         local fontXmlPath = string.format("data/translations/%s.xml", v)
@@ -45,10 +45,11 @@ if not ModSettingGet(ModID .. "DisableFont") and Cpp.PathExists(GenFontPath .. "
         ModTextFileSetContent(fontXmlPath, tostring(fontXml))
         CustomFontState = true
     end
-elseif ModSettingGet(ModID .. "DisableFont") then--禁用时删除
+end
+if ModSettingGet(ModID .. "DisableFontAndClear") then--禁用时删除
     Cpp.Remove(GenFontPath .. "/current.bin")
     Cpp.Remove(GenFontPath .. "/current.png")
-    ModSettingSet(ModID .. "DisableFont", false)
+    ModSettingSet(ModID .. "DisableFontAndClear", false)
 end
 
 local UserFontPath = "mods/CustomFont/fontfiles"--用户自定义的字体

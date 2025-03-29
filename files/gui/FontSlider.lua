@@ -60,6 +60,9 @@ local function BuildFont(pixel_width, pixel_height, font_spacing, space_width, f
     if not BuildFlag then
         return
     end
+    if #fonts < 1 then
+        return
+    end
     pixel_height = math.floor(pixel_height)
     pixel_width = math.floor(pixel_width)
     if pixel_height == 0 and pixel_width == 0 then
@@ -95,6 +98,10 @@ function BuildCheck()
             BuildFlag = true
         end
     end
+end
+
+local function HasNewFont()
+    return Cpp.PathExists(GenFontPath.."/new.bin") and Cpp.PathExists(GenFontPath .. "/new.png")
 end
 
 local function CheckFontNewFile()
@@ -172,14 +179,49 @@ function DrawFontSlider(UI)
         local CreateClick = UI.TextBtn("FontCreate", 0, 0, "$custom_font_font_create")
         UI.GuiTooltip("$custom_font_important_notice")
 
-        if CreateClick and CheckFontNewFile() then
+        if CreateClick and CheckFontNewFile() and #ChooseItemList > 0 then
             BuildFont(pixel_width, pixel_height, font_spacing, space_width, ChooseItemList)
+        elseif CreateClick and #ChooseItemList < 1 then
+            GamePrint("$custom_font_build_miss_font")
         end
 
+        local StatusStr
+        if HasNewFont() then
+            StatusStr = GameTextGet("$custom_font_font_create_progress_complete")
+        elseif BuildFlag then
+            StatusStr = GameTextGet("$custom_font_font_create_progress_no_start")
+        else
+            StatusStr = GameTextGet("$custom_font_font_create_progress_unfinished")
+        end
+        UI.VerticalSpacing(1)
+        UI.NextZDeep(0)
+        UI.Text(0, 0, GameTextGet("$custom_font_font_create_progress", StatusStr))
+        if not BuildFlag then
+            UI.GuiTooltip("$custom_font_font_create_progress_tip")
+        elseif HasNewFont() then
+            UI.GuiTooltip("$custom_font_font_create_progress_complete_tip")
+        end
         UI.LayoutEnd()
     end)
     UI.NextZDeep(-100)
     UI.DrawScrollContainer("FontCustomGUI", true, true)
+    local FontCustomGUIX = UI.GetScrollX("FontCustomGUI")
+    local FontCustomGUIY = UI.GetScrollY("FontCustomGUI")
+    local FontCustomGUIHeigt = UI.GetScrollHeight("FontCustomGUI")
+    UI.ImageButton("CustomFontHelp",FontCustomGUIX + 2,FontCustomGUIY + FontCustomGUIHeigt + 2, "mods/CustomFont/files/gui_image/help.png")
+    UI.GuiTooltip("$custom_font_glyph_bug_info")
+
+    UI.ImageButton("CustomFontVer",FontCustomGUIX + 14,FontCustomGUIY + FontCustomGUIHeigt + 2, "mods/CustomFont/files/gui_image/ver.png")
+    local GuiVerInfo = UI.WidgetInfoTable()
+    if GuiVerInfo.hovered and InputIsKeyJustDown(Key_c) then
+        Cpp.SetClipboard(ModLink)
+    end
+    UI.BetterTooltipsNoCenter(function()
+        UI.NextColor(128, 128, 128, 255)
+        UI.Text(0, 0, string.format("v%s", ModVersion))
+        UI.Text(0, 0, ModLink)
+        UI.Text(0, 0, "$custom_font_about_copy_link_tips")
+    end,UI.GetZDeep()-1000, 10)
 
     local FontSliderID = "FontSlider"
     if return_keyword ~= "" then
