@@ -10,6 +10,12 @@ if not Cpp.PathExists(CachePath) then
     Cpp.CreateDir(CachePath)
 end
 
+local PreviewCachePath = "mods/CustomFont/cache/preview" --预览缓存
+if not Cpp.PathExists(PreviewCachePath) then
+    Cpp.CreateDir(PreviewCachePath)
+end
+
+
 local GenFontPath = "mods/CustomFont/gen_font_file"--生成的字体文件
 if not Cpp.PathExists(GenFontPath) then
     Cpp.CreateDir(GenFontPath)

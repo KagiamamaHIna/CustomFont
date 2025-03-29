@@ -1,6 +1,86 @@
 #include "NFontBuilder.h"
 
 namespace NFontBin {
+	void PreviewsFont(const std::string& output, const std::string& fontPath, int face_index, const std::string& str) {
+		const int pixel_width = 48;
+		const int pixel_height = 48;
+		const int spaceing = 4;
+		image::rgba white;//用于最后渲染图片的像素变量
+		white.channels = 4;
+		white.rgbaArray[0] = 255;
+		white.rgbaArray[1] = 255;
+		white.rgbaArray[2] = 255;
+		white.rgbaArray[3] = 255;
+
+		FT_Library ft;
+		if (FT_Init_FreeType(&ft)) {
+			std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+			return;
+		}
+
+		FT_Face face;
+		if (FT_New_Face(ft, fontPath.c_str(), face_index, &face)) {
+			std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+			return;
+		}
+		FT_Set_Pixel_Sizes(face, pixel_width, pixel_height);
+		FT_Select_Charmap(face, FT_ENCODING_UNICODE);
+
+		std::vector<std::tuple<image::stb_image, int, char32_t>> imgs;
+		int yOffsetLess = 0x7FFFFFFF;
+		int yOffsetMore = 0;
+		int ResultWidth = 0;
+		int baseline = face->size->metrics.ascender >> 6;
+		for (size_t i = 0; i < str.size(); i++) {
+			char c = str.at(i);
+			FT_UInt glyph_index = FT_Get_Char_Index(face, c);
+			if (glyph_index == 0) {
+				continue;
+			}
+			if (FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER)) {
+				continue;
+			}
+
+			FT_GlyphSlot g = face->glyph;
+			int yOffset = baseline - g->bitmap_top;
+
+			imgs.push_back(std::tuple(image::stb_image(g->bitmap.buffer, g->bitmap.width, g->bitmap.rows, 1), yOffset, c));
+			if (yOffset < yOffsetLess) {
+				yOffsetLess = yOffset;
+			}
+			if (yOffsetMore < yOffset + g->bitmap.rows) {
+				yOffsetMore = yOffset + g->bitmap.rows;
+			}
+			if (c == 0x20) {//空格特殊处理
+				ResultWidth += g->bitmap.width + 16;
+			}
+			else {
+				ResultWidth += g->bitmap.width + spaceing;
+			}
+		}
+
+		image::stb_image result(ResultWidth - spaceing, yOffsetMore - yOffsetLess, 4);
+		int i = 0;
+		int DrawWidth = 0;
+		for (const auto& [img, yOffset, c] : imgs) {
+			if (c == 0x20) {
+				DrawWidth += 16;
+				i++;
+				continue;
+			}
+			for (size_t x = 0; x < img.GetWidth(); x++) {
+				for (size_t y = 0; y < img.GetHeight(); y++) {
+					white.rgbaArray[3] = img.GetPixel(x, y).r;
+					result.SetPixel(x + DrawWidth, y + yOffset - yOffsetLess, white);
+				}
+			}
+			DrawWidth += img.GetWidth() + spaceing;
+			i++;
+		}
+		result.WritePng(output);
+		FT_Done_Face(face);
+		FT_Done_FreeType(ft);
+	}
 	std::optional<std::vector<FontMetaData>> GetFontMetaData(const std::string& FontPath) {
 		FT_Library ftl;
 		if (FT_Init_FreeType(&ftl)) {

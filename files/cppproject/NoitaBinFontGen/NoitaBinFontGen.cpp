@@ -212,6 +212,31 @@ int main(int argc, char* argv[]) {
 			w_file << "}";
 			w_file.close();
 		}
+		else if (NFontBin::CheckMapValue(Args, "PreviewsFont", "true")) {
+			std::string FontPath = "";
+			std::string str = "";
+			std::string OutPut = "";
+			int face_index = -1;
+			if (Args.count("FontPath")) {
+				std::vector<std::string> data = NFontBin::split(Args["FontPath"], ',');
+				FontPath = data[0];
+				face_index = data.size() > 1 ? std::stoi(data[1]) : 0;
+			}
+			if (Args.count("OutPut")) {
+				OutPut = Args["OutPut"];
+			}
+			if (Args.count("str")) {
+				str = Args["str"];
+			}
+			if (face_index > -1 && OutPut != "" && FontPath != "") {
+				if (str == "") {
+					NFontBin::PreviewsFont(OutPut, FontPath, face_index);
+				}
+				else {
+					NFontBin::PreviewsFont(OutPut, FontPath, face_index, str);
+				}
+			}
+		}
 	}
 	catch (const std::exception& e) {
 		if (Args.count("log") && logAlways) {

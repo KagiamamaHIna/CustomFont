@@ -131,7 +131,7 @@ namespace image {
 			return !static_cast<bool>(imageData);
 		}
 
-		bool WritePng(std::string& path) const;
+		bool WritePng(const std::string& path) const;
 		bool WritePng(const char* path) const;
 
 		virtual ~stb_image();

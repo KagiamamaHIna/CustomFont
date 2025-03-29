@@ -95,7 +95,7 @@ namespace image {
 		}
 	}
 
-	bool stb_image::WritePng(std::string& path) const {
+	bool stb_image::WritePng(const std::string& path) const {
 		return static_cast<bool>(stbi_write_png(path.c_str(), width, height, channels, imageData, width * channels));
 	}
 

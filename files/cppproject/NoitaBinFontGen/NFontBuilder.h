@@ -18,6 +18,7 @@ namespace NFontBin {
 		FT_Long face_index;
 	};
 	std::optional<std::vector<FontMetaData>> GetFontMetaData(const std::string& FontPath);
+	void PreviewsFont(const std::string& output, const std::string& fontPath, int face_index = 0, const std::string& str = "The quick brown fox jumps over the lazy dog");//str请只写ASCII字符！
 
 	class NFontBuilder {
 	public:

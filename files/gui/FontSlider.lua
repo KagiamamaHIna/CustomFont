@@ -20,7 +20,11 @@ local function GetWinFontList()
         for _, font in ipairs(t) do
             local typeName = Cpp.PathGetFileType(font.path)
             if typeName and typeName:lower() ~= "fon" then--排除fon字体，这是位图字体
-                font.id = string.format("%s%d", font.path, font.face_index)
+                local filename = Cpp.PathGetFileName(font.path)
+                local typename = Cpp.PathGetFileType(filename)
+                filename = string.sub(filename, 1, #filename - #typename - 1)
+
+                font.id = string.format("%s%d", filename, font.face_index)
                 WinFontList[#WinFontList+1] = font
             end
         end
@@ -31,7 +35,11 @@ local function GetWinFontList()
         for _, font in ipairs(t) do
             local typeName = Cpp.PathGetFileType(font.path)
             if typeName and typeName:lower() ~= "fon" then--排除fon字体，这是位图字体
-                font.id = string.format("%s%d", font.path, font.face_index)
+                local filename = Cpp.PathGetFileName(font.path)
+                local typename = Cpp.PathGetFileType(filename)
+                filename = string.sub(filename, 1, #filename - #typename - 1)
+
+                font.id = string.format("%s%d", filename, font.face_index)
                 WinFontList[#WinFontList+1] = font
             end
         end
@@ -44,6 +52,22 @@ local function GetWinFontList()
     end
 
     return WinFontList, WinKeyToFont
+end
+
+local PreviewCachePath = "mods/CustomFont/cache/preview/"
+local PreviewBuildedTable = {}
+local function PreviewBuild(font)
+    if PreviewBuildedTable[font.id] then
+        return
+    end
+
+    PreviewBuildedTable[font.id] = true
+    local command = {
+        "PreviewsFont", "true",
+        "OutPut", string.format("%s%s.png", PreviewCachePath, font.id),
+        "FontPath", string.format("%s,%d", font.path, font.face_index)
+    }
+    ExecuteFontGen(table.concat(command, " "))
 end
 
 local SliderTextKey = {
@@ -241,6 +265,17 @@ function DrawFontSlider(UI)
             
             local click, right = UI.TextBtn(FontName .. tostring(v.face_index), ScrollWidth / 2 - w / 2, 0, FontName)
             local info = UI.WidgetInfoTable()
+            if info.hovered then
+                local PreviewPath = string.format("%s%s.png", PreviewCachePath, v.id)
+                if Cpp.PathExists(PreviewPath) then
+                    local PreviewWidth = GuiGetImageDimensions(UI.gui,PreviewPath, 0.35 / UI.GetScale())
+                    UI.BetterTooltipsNoCenter(function ()
+                        UI.Image(v.id .. "Preview", 0, 0, PreviewPath, 1, 0.35 / UI.GetScale())
+                    end, UI.GetZDeep() - 1000, -info.draw_width - PreviewWidth - 15)
+                else
+                    PreviewBuild(v)
+                end
+            end
             if ChooseItem[v.id] then--选择的字体会提示序号
                 UI.NextOption(GUI_OPTION.Layout_NoLayouting)
                 UI.NextZDeep(0)
