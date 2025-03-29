@@ -117,6 +117,17 @@ local ModID = mod_id
 mod_settings_version = 1
 mod_settings = 
 {
+    Setting({
+        id = "font_preview_render",
+        ui_name = "custom_font_font_preview_render",
+        value_default = "hover",
+        values = ValueList({
+            { "no", "custom_font_font_no" },
+            { "hover",  "custom_font_font_hover" },
+            { "hover_shift",   "custom_font_font_hover_shift" },
+        }),
+        scope = MOD_SETTING_SCOPE_RUNTIME,
+    }),
 	Setting({
 		id = "disable_font",
 		ui_name = "custom_font_disable_font",

@@ -273,7 +273,15 @@ function DrawFontSlider(UI)
                         UI.Image(v.id .. "Preview", 0, 0, PreviewPath, 1, 0.35 / UI.GetScale())
                     end, UI.GetZDeep() - 1000, -info.draw_width - PreviewWidth - 15)
                 else
-                    PreviewBuild(v)
+                    local mode = ModSettingGet("CustomFont.font_preview_render")
+                    if mode == "hover" then
+                        PreviewBuild(v)
+                    elseif mode == "hover_shift" then
+                        local shift = InputIsKeyDown(Key_LSHIFT) or InputIsKeyDown(Key_RSHIFT)
+                        if shift then
+                            PreviewBuild(v)
+                        end
+                    end
                 end
             end
             if ChooseItem[v.id] then--选择的字体会提示序号
