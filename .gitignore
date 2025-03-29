@@ -18,3 +18,5 @@
 /files/cppproject/freetype.lib
 /files/cppproject/NoitaBinFontGen/NoitaBinFontGen/x64
 /files/cppproject/NoitaBinFontGen/.vs/
+/fontfiles
+/gen_font_file

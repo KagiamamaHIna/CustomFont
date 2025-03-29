@@ -72,6 +72,7 @@ namespace NFontBin {
 
 		int HalfwidthSpaceWidth = 16;//半角字符空格宽，全角空格通过此推断出来宽度，高度选择PixelHeight的
 
+		bool Char32SetAny = false;//开启后将尝试渲染字体中的所有字符
 		std::set<char32_t> Char32Set;//字符集合，用于存储要渲染的编码
 		std::map<char32_t, char32_t> CharMap;//字符映射 (编码，目标字符) ，假如存在映射，那么按照编码渲染完后分配给特定的字符做精灵图，可以用于比如wingdings字体的渲染
 

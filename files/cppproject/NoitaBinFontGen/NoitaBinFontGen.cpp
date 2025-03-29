@@ -1,5 +1,5 @@
 #ifdef NoitaBinFontGenRelease
-#pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" )
+//#pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" )
 #endif // NoitaBinFontGenRelease
 
 
@@ -83,7 +83,11 @@ int main(int argc, char* argv[]) {
 				}
 			}
 
-			if (Args.count("CharsetRange")) {//字体集数据处理，数据应按 start,end|start,end 顺序排列
+			if (NFontBin::CheckMapValue(Args, "Char32SetAny", "true")) {
+				builder.Char32SetAny = true;
+			}
+
+			if (!builder.Char32SetAny && Args.count("CharsetRange")) {//字体集数据处理，数据应按 start,end|start,end 顺序排列
 				for (const auto& v : NFontBin::split(Args["CharsetRange"], '|')) {
 					std::vector<std::string> CharsetData = NFontBin::split(v, ',');
 					builder.AddCharsetRange(std::stoi(CharsetData[0]), std::stoi(CharsetData[1]));

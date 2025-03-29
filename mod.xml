@@ -1,6 +1,6 @@
 <Mod
 	name="Custom Font"
-	description="Dynamically customize your in-game fonts"
+	description="Dynamically customize your in-game fonts\nPress [HOME] to open GUI"
 	request_no_api_restrictions="1" 
 > 
 </Mod>

@@ -3,9 +3,9 @@ dofile_once("mods/CustomFont/files/lib/fn.lua")
 dofile_once("data/scripts/debug/keycodes.lua")
 dofile_once("data/scripts/lib/utilities.lua")
 
-local checkboxFile = "mods/custom_font/files/gui_image/checkbox.png"
-local checkboxFillFile = "mods/custom_font/files/gui_image/checkbox_fill.png"
-local grey_1pxFile = "mods/custom_font/files/gui_image/grey_1px.png"
+local checkboxFile = "mods/CustomFont/files/gui_image/checkbox.png"
+local checkboxFillFile = "mods/CustomFont/files/gui_image/checkbox_fill.png"
+local grey_1pxFile = "mods/CustomFont/files/gui_image/grey_1px.png"
 local picker_close = "$custom_font_picker_close"
 local picker_open = "$custom_font_picker_open"
 local picker_desc = "$custom_font_picker_desc"

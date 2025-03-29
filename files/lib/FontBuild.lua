@@ -62,6 +62,8 @@ function FontCommandSetBuilder()
 
         PreCharsetFile = {},                        --提前预设的字符集文件，按行分割，十六进制
 
+        Char32SetAny = false,                       --开启后将尝试渲染字体中的所有字符
+
         ---@type table<table<integer,integer>>
         Char32Set = {},                             --字符集合，用于存储要渲染的编码
         ---@type table<FontMetaData>
@@ -73,7 +75,8 @@ function FontCommandSetBuilder()
     ---@param EndChar integer
     ---@return FontCommandSetBuildClass self
     function result:AddCharsetRange(StartChar, EndChar)
-        self.Char32Set[#self.Char32Set+1] = {StartChar, EndChar}
+        self.Char32Set[#self.Char32Set + 1] = { StartChar, EndChar }
+        return self
     end
 
     ---增加字体
@@ -84,7 +87,8 @@ function FontCommandSetBuilder()
         if face_index == nil then
             face_index = 0
         end
-        self.Fonts[#self.Fonts+1] = {path = fontPath, face_index = face_index}
+        self.Fonts[#self.Fonts + 1] = { path = fontPath, face_index = face_index }
+        return self
     end
 
     ---构建
@@ -121,12 +125,18 @@ function FontCommandSetBuilder()
         resultTable[#resultTable + 1] = "AddFont"
         resultTable[#resultTable + 1] = SerializeAny(table.concat(FontStrArray, '|'))
         
-        local CharsetStrArray = {}
-        for k, v in ipairs(self.Char32Set)do
-            CharsetStrArray[#CharsetStrArray+1] = table.concat({v[1], ',', v[2]})
+        if not self.Char32SetAny then
+            local CharsetStrArray = {}
+            for k, v in ipairs(self.Char32Set)do
+                CharsetStrArray[#CharsetStrArray+1] = table.concat({v[1], ',', v[2]})
+            end
+            resultTable[#resultTable + 1] = "CharsetRange"
+            resultTable[#resultTable + 1] = SerializeAny(table.concat(CharsetStrArray, '|'))
+        else
+            resultTable[#resultTable + 1] = "Char32SetAny"
+            resultTable[#resultTable + 1] = "true"
         end
-        resultTable[#resultTable + 1] = "CharsetRange"
-        resultTable[#resultTable + 1] = SerializeAny(table.concat(CharsetStrArray, '|'))
+
 
         if #self.PreCharsetFile > 0 then
             resultTable[#resultTable + 1] = "PreCharsetFile"
