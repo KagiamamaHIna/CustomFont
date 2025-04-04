@@ -232,8 +232,8 @@ namespace NFontBin {
 		for (const auto& c : result.UnrenderedChars) {//不支持的字符就映射到这里
 			NoitaFont.AddFontData(c, ErrorRenderX, ErrorRenderY, PixelLine, PixelLine, 0, 0, PixelLine + FontSpacing);
 		}
-		NoitaFont.AddFontData(0x20, 0, 0, 0, 0, 0, 0, HalfwidthSpaceWidth);//恒定插入，避免问题
-		NoitaFont.AddFontData(0x3000, 0, 0, 0, 0, 0, 0, HalfwidthSpaceWidth * 2);
+		NoitaFont.AddFontData(0x20, 0, 0, 0, PixelLine, 0, 0, HalfwidthSpaceWidth);//恒定插入，避免问题
+		NoitaFont.AddFontData(0x3000, 0, 0, 0, PixelLine, 0, 0, HalfwidthSpaceWidth * 2);
 
 		bsp.Create().WritePng(SpriteFilePath);
 		NoitaFont.SerializationToFile(BinFilePath);
