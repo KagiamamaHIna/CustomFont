@@ -1,6 +1,6 @@
 ModDir = "mods/CustomFont/"
 ModID = "CustomFont"
-ModVersion = "1.0.0"
+ModVersion = "1.0.1"
 ModLink = "https://github.com/KagiamamaHIna/CustomFont"
 
 QuietNaN = 0/0

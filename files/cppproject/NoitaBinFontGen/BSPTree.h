@@ -6,7 +6,7 @@
 namespace image {
 	class BSPTree {
 	public:
-		BSPTree(int channels, int widthMax = 4096, int heightMax = 4096) : channels{ channels } {
+		BSPTree(int channels, int widthMax = 4096, int heightMax = 4096) : channels{ channels }, StartWidth{ widthMax } {
 			Root = new Node(0, 0, widthMax, heightMax);
 		}
 		virtual ~BSPTree();
@@ -16,7 +16,7 @@ namespace image {
 			int x;
 			int y;
 		};
-
+		bool StaticWidth = true;//让宽度不再动态分配，设置一个良好的数值(4096)可以让Noita加载的时候避免崩溃
 		InsertResult insert(stb_image& inputImg);
 		stb_image Create();
 	private:
@@ -33,7 +33,7 @@ namespace image {
 			Node* left = nullptr;
 			Node* right = nullptr;
 		};
-
+		int StartWidth;
 		Node* Root = nullptr;
 		int channels;
 	};

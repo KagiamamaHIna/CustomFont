@@ -54,6 +54,9 @@ namespace image {
 				//std::cout << "node w:" << node->w << " node h:" << node->h << '\n';
 			}
 		}
+		if (StaticWidth) {
+			widthMax = StartWidth;
+		}
 		stb_image result(widthMax, heightMax, channels);//主图片
 
 		while (!imgStack.empty()) {

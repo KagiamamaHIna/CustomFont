@@ -125,14 +125,14 @@ function FontCommandSetBuilder()
         resultTable[#resultTable + 1] = "AddFont"
         resultTable[#resultTable + 1] = SerializeAny(table.concat(FontStrArray, '|'))
         
-        if not self.Char32SetAny then
+        if not self.Char32SetAny and #self.Char32Set > 0 then
             local CharsetStrArray = {}
             for k, v in ipairs(self.Char32Set)do
                 CharsetStrArray[#CharsetStrArray+1] = table.concat({v[1], ',', v[2]})
             end
             resultTable[#resultTable + 1] = "CharsetRange"
             resultTable[#resultTable + 1] = SerializeAny(table.concat(CharsetStrArray, '|'))
-        else
+        elseif self.Char32SetAny then
             resultTable[#resultTable + 1] = "Char32SetAny"
             resultTable[#resultTable + 1] = "true"
         end

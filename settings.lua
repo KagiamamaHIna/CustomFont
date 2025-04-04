@@ -142,7 +142,7 @@ mod_settings =
 		value_default = false,
 		ui_fn = function(mod_id, gui, in_main_menu, im_id, setting)
 			GuiIdPushString(gui,"CustomFont_disable_font_and_clear")
-            local click = GuiButton(gui, 1, 1, 1, GetText("custom_font_disable_and_clear_font"))
+            local click = GuiButton(gui, 1, 0, 0, GetText("custom_font_disable_and_clear_font"))
             GuiTooltip(gui,GetText("custom_font_disable_and_clear_font_tips"), "")
 			if click then
 				ModSettingSet(ModID .. "DisableFontAndClear", true)
