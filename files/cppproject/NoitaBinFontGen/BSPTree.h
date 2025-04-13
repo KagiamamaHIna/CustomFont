@@ -19,6 +19,10 @@ namespace image {
 		bool StaticWidth = true;//让宽度不再动态分配，设置一个良好的数值(4096)可以让Noita加载的时候避免崩溃
 		InsertResult insert(stb_image& inputImg);
 		stb_image Create();
+
+		BSPTree(const BSPTree&) = delete;
+		BSPTree(BSPTree&&) = delete;
+		BSPTree& operator=(BSPTree&& src) = delete;
 	private:
 		struct Node {
 			Node(int x = 0, int y = 0, int w = 0, int h = 0) :x{ x }, y{ y }, w{ w }, h{ h } {}
