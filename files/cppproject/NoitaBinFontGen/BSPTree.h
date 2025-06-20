@@ -26,6 +26,11 @@ namespace image {
 	private:
 		struct Node {
 			Node(int x = 0, int y = 0, int w = 0, int h = 0) :x{ x }, y{ y }, w{ w }, h{ h } {}
+			~Node() {
+				if (img) {
+					delete img;
+				}
+			}
 			BSPTree::InsertResult insert(stb_image& img);//返回值代表这次插入是否成功
 			int x;
 			int y;

@@ -79,6 +79,58 @@ end
 ExecuteFontGen(PathFontDataToFile(WinFontPath, "mods/CustomFont/cache/win_fonts.lua"))--读取系统安装字体
 ExecuteFontGen(PathFontDataToFile(UserFontPath, "mods/CustomFont/cache/user_fonts.lua"))--读取用户自定义的字体
 
+--[[  无视这个:), 他只是在其他地方用的生成脚本
+local CJKLocal = {
+    "zh-cn",
+    "jp",
+    "ko",
+}
+
+local StartNormalSize = 30
+local StartHugeSize = 41
+local Count = 10
+local Step = 4
+
+local VituralSize = 48
+
+local NormalFont = "mods/better_cjk_pixel_font/data/fonts/generated/fusion-pixel-12px_%s_font_%d.%s"
+local CJKHugeFontPath = "mods/better_cjk_pixel_font/data/fonts/generated/fusion-pixel-12px_huge_%s_font_%d.%s"
+local BinSpritePath = "data/fonts/generated/fusion-pixel-12px_%s_font_%d.png"
+local BinHugeSpritePath = "data/fonts/generated/fusion-pixel-12px_huge_%s_font_%d.png"
+local charsetPath = "mods/CustomFont/charset/%s.txt"
+
+for _,v in ipairs(CJKLocal)do
+    local builder = FontCommandSetBuilder()
+    local builderHuge = FontCommandSetBuilder()
+    builder.PreCharsetFile[#builder.PreCharsetFile + 1] = string.format(charsetPath, v)
+    builderHuge.PreCharsetFile = builder.PreCharsetFile
+    builder:AddFont("mods/CustomFont/fontfiles/fusion-pixel-12px-proportional-zh_hans.ttf")
+    builderHuge.Fonts = builder.Fonts
+    builder.PixelHeight = StartNormalSize
+    builderHuge.PixelHeight = StartHugeSize
+    local ThisTempVitural = VituralSize
+    for i=1,Count do
+        builder.BinFilePath = string.format(NormalFont, v, ThisTempVitural, "bin")
+        builder.SpriteFilePath = string.format(NormalFont, v, ThisTempVitural, "png")
+        builder.BinSpriteFilePath = string.format(BinSpritePath, v, ThisTempVitural, "png")
+        builderHuge.BinFilePath = string.format(CJKHugeFontPath, v, ThisTempVitural, "bin")
+        builderHuge.SpriteFilePath = string.format(CJKHugeFontPath, v, ThisTempVitural, "png")
+        builderHuge.BinSpriteFilePath = string.format(BinHugeSpritePath, v, ThisTempVitural, "png")
+        ExecuteFontGen(builder:Build())
+        ExecuteFontGen(builderHuge:Build())
+
+        if i == 1 or i % 2 == 0 then
+            builder.PixelHeight = builder.PixelHeight - Step
+            builderHuge.PixelHeight = builderHuge.PixelHeight - Step
+
+            builder.HalfwidthSpaceWidth = builder.HalfwidthSpaceWidth - (Step / 2)
+            builderHuge.HalfwidthSpaceWidth = builderHuge.HalfwidthSpaceWidth - (Step / 2)
+        end
+
+        ThisTempVitural = ThisTempVitural - 4
+    end
+end]]
+
 local initFlag = false
 GuiUpdate = nil
 function OnWorldPostUpdate()
