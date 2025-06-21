@@ -17,6 +17,9 @@ namespace image {
 			if (node->right) {
 				nodeStack.push(node->right);
 			}
+			if (node->img) {
+				delete node->img;
+			}
 			delete node;
 		}
 	}
