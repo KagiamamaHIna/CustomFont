@@ -50,6 +50,9 @@ namespace image {
 		width = src_width;
 		size_t size = src_width * src_height * channel;
 		imageData = (unsigned char*)malloc(size);
+		if (imageData == nullptr) {
+			throw std::bad_alloc();
+		}
 		memcpy(imageData, data, size);
 	}
 
@@ -59,6 +62,9 @@ namespace image {
 		width = src_width;
 		size_t size = width * height * channel;
 		imageData = (unsigned char*)malloc(size);
+		if (imageData == nullptr) {
+			throw std::bad_alloc();
+		}
 		memset(imageData, 0, size);
 	}
 
@@ -68,6 +74,9 @@ namespace image {
 		channels = src.channels;
 		size_t size = width * height * channels;
 		imageData = (unsigned char*)malloc(size);
+		if (imageData == nullptr) {
+			throw std::bad_alloc();
+		}
 		memcpy(imageData, src.imageData, size);
 	}
 
@@ -76,7 +85,7 @@ namespace image {
 		height = src.height;
 		channels = src.channels;
 		imageData = src.imageData;
-		src.imageData = 0;
+		src.imageData = nullptr;
 	}
 
 	stb_image& stb_image::operator=(stb_image&& src) noexcept {
@@ -84,14 +93,14 @@ namespace image {
 		height = src.height;
 		channels = src.channels;
 		imageData = src.imageData;
-		src.imageData = 0;
+		src.imageData = nullptr;
 		return *this;
 	}
 
 	stb_image::~stb_image() {
-		if (imageData != 0) {
+		if (imageData != nullptr) {
 			stbi_image_free(imageData);
-			imageData = 0;
+			imageData = nullptr;
 		}
 	}
 
