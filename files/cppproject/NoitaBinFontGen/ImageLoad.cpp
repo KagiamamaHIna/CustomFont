@@ -89,6 +89,9 @@ namespace image {
 	}
 
 	stb_image& stb_image::operator=(stb_image&& src) noexcept {
+		if (this == &src) {
+			return;
+		}
 		width = src.width;
 		height = src.height;
 		channels = src.channels;
